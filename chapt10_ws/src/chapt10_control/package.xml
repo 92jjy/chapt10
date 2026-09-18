@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>chapt10_control</name>
+  <version>0.0.1</version>
+  <description>第10章：MPC 轨迹跟踪节点（节点和 MPC 算法都改自开源项目 mpc_ros2，MIT）</description>
+  <maintainer email="jjy@todo.todo">jjy</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>tf2</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2_geometry_msgs</depend>
+  <depend>eigen</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

@@ -1,0 +1,10 @@
+planner_node:
+  ros__parameters:
+    use_sim_time: true
+    robot_radius: 0.20
+    frame_id: map
+    expansion_draw_buffer: 170
+    marker_height: 0.01
+    marker_color_rgb: [1.0, 0.0, 0.0]
+    smoothing_factor: 0.1
+    boundary_safety_margin: 0.1

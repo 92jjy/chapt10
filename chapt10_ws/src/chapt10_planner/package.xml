@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>chapt10_planner</name>
+  <version>0.0.1</version>
+  <description>第10章：A* 全局路径规划节点（节点和 A* 算法都改自开源项目 light_Astar_ROS2_path_planner，MIT）</description>
+  <maintainer email="jjy@todo.todo">jjy</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>rclcpp</depend>
+  <depend>nav_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>tf2_ros</depend>
+  <depend>tf2</depend>
+  <depend>visualization_msgs</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

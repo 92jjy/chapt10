@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>chapt10_bringup</name>
+  <version>0.0.1</version>
+  <description>第10章：导航总启动包（fishbot 仿真 + slam_toolbox + chapt9 的 A*/MPC 节点）</description>
+  <maintainer email="jjy@todo.todo">jjy</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>chapt10_planner</exec_depend>
+  <exec_depend>chapt10_control</exec_depend>
+  <exec_depend>fishbot_description</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>gazebo_ros2_control</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

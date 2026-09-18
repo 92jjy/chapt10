@@ -1,0 +1,80 @@
+import launch
+import launch_ros
+from ament_index_python.packages import get_package_share_directory
+from launch.launch_description_sources import PythonLaunchDescriptionSource
+
+def generate_launch_description():
+    # 获取默认路径
+    robot_name_in_model = "fishbot"
+    urdf_tutorial_path = get_package_share_directory('fishbot_description')
+    default_model_path = urdf_tutorial_path + '/urdf/fishbot/fishbot.urdf.xacro'
+    default_world_path = urdf_tutorial_path + '/world/custom_room.world'
+    # 为 Launch 声明参数
+    action_declare_arg_mode_path = launch.actions.DeclareLaunchArgument(
+        name='model', default_value=str(default_model_path),
+        description='URDF 的绝对路径')
+    # 获取文件内容生成新的参数
+    robot_description = launch_ros.parameter_descriptions.ParameterValue(
+        launch.substitutions.Command(
+            ['xacro ', launch.substitutions.LaunchConfiguration('model')]),
+        value_type=str)
+
+    robot_state_publisher_node = launch_ros.actions.Node(
+        package='robot_state_publisher',
+        executable='robot_state_publisher',
+        parameters=[{'robot_description': robot_description}]
+    )
+
+    # 通过 IncludeLaunchDescription 包含另外一个 launch 文件
+    launch_gazebo = launch.actions.IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([get_package_share_directory(
+            'gazebo_ros'), '/launch', '/gazebo.launch.py']),
+        # 传递参数
+        launch_arguments=[('world', default_world_path), ('verbose', 'true')]
+    )
+    # 请求 Gazebo 加载机器人
+    spawn_entity_node = launch_ros.actions.Node(
+        package='gazebo_ros',
+        executable='spawn_entity.py',
+        arguments=['-topic', '/robot_description',
+                   '-entity', robot_name_in_model, ])
+    load_joint_state_controller = launch_ros.actions.Node(
+        package='controller_manager',
+        executable='spawner',
+        output='screen',
+        arguments=[
+            'fishbot_joint_state_broadcaster',
+            '--controller-manager-timeout', '60.0',
+        ],
+    )
+
+    # 加载并激活 fishbot_diff_drive_controller 控制器
+    load_fishbot_diff_drive_controller = launch_ros.actions.Node(
+        package='controller_manager',
+        executable='spawner',
+        output='screen',
+        arguments=[
+            'fishbot_diff_drive_controller',
+            '--controller-manager-timeout', '60.0',
+        ],
+    )
+
+    return launch.LaunchDescription([
+        action_declare_arg_mode_path,
+        robot_state_publisher_node,
+        launch_gazebo,
+        spawn_entity_node,
+        # 模型生成完成后再启动控制器 spawner；
+        # spawner 自身会等待 controller_manager 就绪，两个控制器可并行激活
+        launch.actions.RegisterEventHandler(
+            event_handler=launch.event_handlers.OnProcessExit(
+                target_action=spawn_entity_node,
+                on_exit=[
+                    load_joint_state_controller,
+                    load_fishbot_diff_drive_controller,
+                ],)
+            ),
+    ])
+
+#启动launch文件后使用键盘控制机器人移动
+# ros2 run teleop_twist_keyboard teleop_twist_keyboard
